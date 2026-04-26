@@ -588,13 +588,9 @@ public class ValueAnimator extends Animator {
             ArrayList<ValueAnimator> animations = sAnimations.get();
             ArrayList<ValueAnimator> delayedAnims = sDelayedAnims.get();
             switch (msg.what) {
-                // TODO: should we avoid sending frame message when starting if we
-                // were already running?
                 case ANIMATION_START:
+                case ANIMATION_FRAME:
                     ArrayList<ValueAnimator> pendingAnimations = sPendingAnimations.get();
-                    if (animations.size() > 0 || delayedAnims.size() > 0) {
-                        callAgain = false;
-                    }
                     // pendingAnims holds any animations that have requested to be started
                     // We're going to clear sPendingAnimations, but starting animation may
                     // cause more to be added to the pending list (for example, if one animation
@@ -615,8 +611,7 @@ public class ValueAnimator extends Animator {
                             }
                         }
                     }
-                    // fall through to process first frame of new animations
-                case ANIMATION_FRAME:
+
                     // currentTime holds the common time for all animations processed
                     // during this frame
                     long currentTime = AnimationUtils.currentAnimationTimeMillis();
@@ -945,7 +940,10 @@ public class ValueAnimator extends Animator {
             animationHandler = new AnimationHandler();
             sAnimationHandler.set(animationHandler);
         }
-        animationHandler.sendEmptyMessage(ANIMATION_START);
+        if (sAnimations.get().size() == 0 && sDelayedAnims.get().size() == 0 &&
+                sPendingAnimations.get().size() == 1) {
+            animationHandler.sendEmptyMessage(ANIMATION_START);
+        }
     }
 
     @Override
