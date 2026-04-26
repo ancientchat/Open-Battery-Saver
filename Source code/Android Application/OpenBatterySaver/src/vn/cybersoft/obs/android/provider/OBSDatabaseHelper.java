@@ -17,6 +17,7 @@ package vn.cybersoft.obs.android.provider;
 import java.io.File;
 
 import vn.cybersoft.obs.android.utilities.Log;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -33,12 +34,6 @@ public class OBSDatabaseHelper extends SQLiteOpenHelper {
 	private static final int VERSION_1 = 1;
 	
 	private static final int VERSION_2 = 2;
-	
-    // This creates a default original mode name "short"
-    private static final String DEFAULT_MODE_1 = "('mode_name_short', 'mode_desc_short', 0, 255, 600000, 1, 1, 1, 1, 1);";
-
-    // This creates a default original mode name "long"
-    private static final String DEFAULT_MODE_2 = "('mode_name_long', 'mode_desc_long', 0, 25, 15000, 0, 0, 0, 0, 0);";
 	
     // Database and table names
     static final String DATABASE_NAME = "obs.db";
@@ -114,21 +109,26 @@ public class OBSDatabaseHelper extends SQLiteOpenHelper {
 		
         // insert default modes
         Log.i("Inserting default optimal modes");
-        String cs = ", "; //comma and space
-        String insertMe = "INSERT INTO " + OPTIMAL_MODES_TABLE_NAME + " (" +
-                DataProviderApi.OptimalModesColumns.NAME + cs +
-                DataProviderApi.OptimalModesColumns.DESC + cs +
-                DataProviderApi.OptimalModesColumns.CAN_EDIT + cs +
-                DataProviderApi.OptimalModesColumns.SCREEN_BRIGHTNESS + cs +
-                DataProviderApi.OptimalModesColumns.SCREEN_TIMEOUT + cs +
-                DataProviderApi.OptimalModesColumns.VIBRATE + cs +
-                DataProviderApi.OptimalModesColumns.WIFI + cs +
-                DataProviderApi.OptimalModesColumns.BLUETOOTH + cs +
-                DataProviderApi.OptimalModesColumns.SYNC + cs +
-                DataProviderApi.OptimalModesColumns.HAPTIC_FEEDBACK + ") VALUES ";
-        db.execSQL(insertMe + DEFAULT_MODE_1);
-        db.execSQL(insertMe + DEFAULT_MODE_2);
+
+        insertDefaultMode(db, "mode_name_short", "mode_desc_short", 0, 255, 600000, 1, 1, 1, 1, 1);
+        insertDefaultMode(db, "mode_name_long", "mode_desc_long", 0, 25, 15000, 0, 0, 0, 0, 0);
 	}
+
+    private void insertDefaultMode(SQLiteDatabase db, String name, String desc, int canEdit, int screenBrightness,
+		int screenTimeout, int vibrate, int wifi, int bluetooth, int sync, int hapticFeedback) {
+        ContentValues values = new ContentValues();
+        values.put(DataProviderApi.OptimalModesColumns.NAME, name);
+        values.put(DataProviderApi.OptimalModesColumns.DESC, desc);
+        values.put(DataProviderApi.OptimalModesColumns.CAN_EDIT, canEdit);
+        values.put(DataProviderApi.OptimalModesColumns.SCREEN_BRIGHTNESS, screenBrightness);
+        values.put(DataProviderApi.OptimalModesColumns.SCREEN_TIMEOUT, screenTimeout);
+        values.put(DataProviderApi.OptimalModesColumns.VIBRATE, vibrate);
+        values.put(DataProviderApi.OptimalModesColumns.WIFI, wifi);
+        values.put(DataProviderApi.OptimalModesColumns.BLUETOOTH, bluetooth);
+        values.put(DataProviderApi.OptimalModesColumns.SYNC, sync);
+        values.put(DataProviderApi.OptimalModesColumns.HAPTIC_FEEDBACK, hapticFeedback);
+        db.insert(OPTIMAL_MODES_TABLE_NAME, null, values);
+    }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
