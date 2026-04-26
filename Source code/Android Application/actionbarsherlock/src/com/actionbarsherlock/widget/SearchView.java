@@ -150,6 +150,8 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
     private SearchableInfo mSearchable;
     private Bundle mAppSearchData;
 
+    private boolean mIsWorking;
+
     /*
     * SearchView can be set expanded before the IME is ready to be shown during
     * initial UI setup. The show operation is asynchronous to account for this.
@@ -407,6 +409,29 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
      *
      * @attr ref android.R.styleable#SearchView_imeOptions
      */
+    /**
+     * Shows a progress spinner or disables the view when working.
+     * @param working whether the SearchView is working or not.
+     */
+    void setWorking(boolean working) {
+        if (mIsWorking != working) {
+            mIsWorking = working;
+            // Since standard ABS SearchView doesn't include a spinner in its layout,
+            // we primarily manage state here to avoid errors and support potential subclasses.
+            // In a fully customized view, we would toggle visibility of a ProgressBar.
+            invalidate();
+        }
+    }
+
+    /**
+     * Called by SuggestionsAdapter when the cursor's dataset changes.
+     */
+    void onDataSetChanged() {
+        if (mSuggestionsAdapter != null && mSuggestionsAdapter.getCursor() != null) {
+            updateSubmitButton(!TextUtils.isEmpty(mQueryTextView.getText()));
+        }
+    }
+
     public void setImeOptions(int imeOptions) {
         mQueryTextView.setImeOptions(imeOptions);
     }
