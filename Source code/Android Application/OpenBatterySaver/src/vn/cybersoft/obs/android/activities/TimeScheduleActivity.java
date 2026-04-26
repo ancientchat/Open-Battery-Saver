@@ -139,11 +139,12 @@ public class TimeScheduleActivity extends FragmentActivity
         textView = (TextView) v.findViewById(R.id.header_mode);
         
         String modeName = mModeNames.get(schedule.modeId);
-        if (modeName == null) {
+        if (!mModeNames.containsKey(schedule.modeId)) {
 		OptimalMode mode = OptimalMode.getMode(getContentResolver(), schedule.modeId);
 		if (mode != null) {
 			modeName = mode.name;
 		}
+		mModeNames.put(schedule.modeId, modeName);
         }
         textView.setText(Utils.getString(this, modeName, R.string.class));
 
@@ -288,11 +289,12 @@ public class TimeScheduleActivity extends FragmentActivity
 			TextView modeToChange = (TextView) view.findViewById(R.id.text2);
 
 			String modeName = mModeNames.get(schedule.modeId);
-			if (modeName == null) {
+			if (!mModeNames.containsKey(schedule.modeId)) {
 				OptimalMode mode = OptimalMode.getMode(getContentResolver(), schedule.modeId);
 				if (mode != null) {
 					modeName = mode.name;
 				}
+				mModeNames.put(schedule.modeId, modeName);
 			}
 
 			final String modeNameStr = Utils.getString(mContext, modeName, R.string.class);
