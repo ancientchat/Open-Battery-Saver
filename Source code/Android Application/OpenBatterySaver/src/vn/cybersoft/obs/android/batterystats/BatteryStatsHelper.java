@@ -117,8 +117,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
                 try {
 					bs.loadNameAndIcon();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(TAG, "Error loading name and icon", e);
 				}
             }
         }
@@ -391,8 +390,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
 			processAppUsage(includeZeroConsumption);
 			processMiscUsage();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error refreshing stats", e);
 		}
 
         Collections.sort(mUsageList);
@@ -885,17 +883,13 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
 		try {
 			WIFI_POWER = (Double) mPowerProfile.getClass().getMethod("getAveragePower", String.class).invoke(null, "wifi.active") / 3600;
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error getting wifi power per byte", e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error getting wifi power per byte", e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error getting wifi power per byte", e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error getting wifi power per byte", e);
 		} 
         return WIFI_POWER / (WIFI_BPS / 8);
     }
@@ -968,11 +962,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
 			try {
 				data = (byte[]) getStatistics.invoke(mBatteryInfo); 
 			} catch (InvocationTargetException e) {
-				if (e.getCause() instanceof RemoteException) {
-					e.printStackTrace();
-				} else {
-					e.printStackTrace();
-				}
+				Log.e(TAG, "Error loading battery statistics", e);
 			}
             //byte[] data = mBatteryInfo.getStatistics();
             Parcel parcel = Parcel.obtain();
@@ -985,19 +975,15 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
             //mStats.distributeWorkLocked(BatteryStats.STATS_SINCE_CHARGED);
             mStats.getClass().getMethod("distributeWorkLocked", Integer.class).invoke(mStats, STATS_SINCE_CHARGED);
         } catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error unmarshalling battery stats", e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error unmarshalling battery stats", e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error unmarshalling battery stats", e);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Error unmarshalling battery stats", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(TAG, "Error unmarshalling battery stats", e);
 		}
     }
 }
