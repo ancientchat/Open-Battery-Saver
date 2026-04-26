@@ -873,6 +873,21 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
         }
     }
 
+    /* package */ void onDataSetChanged() {
+        // The data has changed, re-evaluate views
+        updateViewsVisibility(isIconified());
+    }
+
+    /* package */ void setWorking(boolean working) {
+        if (mSearchHintIcon != null) {
+            if (working) {
+                mSearchHintIcon.setImageDrawable(null);
+            } else {
+                mSearchHintIcon.setImageResource(getSearchIconId());
+            }
+        }
+    }
+
     /**
      * Called by the SuggestionsAdapter
      * @hide
