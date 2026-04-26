@@ -84,6 +84,10 @@ public class PassionConstants extends DreamConstants {
 		return 106.81;
 	}
 
+	public double bluetoothPower() {
+		return 20.0;
+	}
+
 	private static final double[] arrayGpsStatePower = {0.0, 17.5, 268.94};
 	public double[] gpsStatePower() {
 		return arrayGpsStatePower;

@@ -93,6 +93,10 @@ public class DreamConstants implements PhoneConstants {
 		return 384.62;
 	}
 
+	public double bluetoothPower() {
+		return 20.0;
+	}
+
 	private static final double[] arrayGpsStatePower = {0.0, 173.55, 429.55};
 	public double[] gpsStatePower() {
 		return arrayGpsStatePower;
@@ -197,6 +201,8 @@ public class DreamConstants implements PhoneConstants {
 			return ratios[ratios.length - 1] * 100;
 		} else if("Audio".equals(componentName)) {
 			return audioPower();
+		} else if("Bluetooth".equals(componentName)) {
+			return bluetoothPower();
 		} else if("GPS".equals(componentName)) {
 			double[] gpsPow = gpsStatePower();
 			return gpsPow[gpsPow.length - 1];

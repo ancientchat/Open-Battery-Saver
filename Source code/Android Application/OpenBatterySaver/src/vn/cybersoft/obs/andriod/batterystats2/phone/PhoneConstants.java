@@ -66,6 +66,10 @@ public interface PhoneConstants {
 	 */
 	public double audioPower();
 
+	/* Gives the power consumption for the bluetooth interface.
+	 */
+	public double bluetoothPower();
+
 	/* Gives the power consumption for each of the GPS states.  These states are
 	 * {OFF, SLEEP, ON} in that order.  See GPS.java.
 	 */

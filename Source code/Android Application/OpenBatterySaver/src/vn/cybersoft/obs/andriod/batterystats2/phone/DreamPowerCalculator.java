@@ -26,6 +26,7 @@ import vn.cybersoft.obs.andriod.batterystats2.components.GPS.GpsData;
 import vn.cybersoft.obs.andriod.batterystats2.components.LCD.LcdData;
 import vn.cybersoft.obs.andriod.batterystats2.components.OLED.OledData;
 import vn.cybersoft.obs.andriod.batterystats2.components.Sensors;
+import vn.cybersoft.obs.andriod.batterystats2.components.Bluetooth.BluetoothData;
 import vn.cybersoft.obs.andriod.batterystats2.components.Sensors.SensorData;
 import vn.cybersoft.obs.andriod.batterystats2.components.Threeg;
 import vn.cybersoft.obs.andriod.batterystats2.components.Threeg.ThreegData;
@@ -79,6 +80,10 @@ public class DreamPowerCalculator implements PhonePowerCalculator {
 
 	public double getAudioPower(AudioData data) {
 		return data.musicOn ? coeffs.audioPower() : 0;
+	}
+
+	public double getBluetoothPower(BluetoothData data) {
+		return data.bluetoothOn ? coeffs.bluetoothPower() : 0;
 	}
 
 	public double getGpsPower(GpsData data) {
