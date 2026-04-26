@@ -212,9 +212,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
 
         Uri.Builder uriBuilder = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
-                .authority(authority)
-                .query("")  // TODO: Remove, workaround for a bug in Uri.writeToParcel()
-                .fragment("");  // TODO: Remove, workaround for a bug in Uri.writeToParcel()
+                .authority(authority);
 
         // if content path provided, insert it now
         final String contentPath = mSearchable.getSuggestPath();
