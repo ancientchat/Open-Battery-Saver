@@ -25,6 +25,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.CursorLoader;
 
+import vn.cybersoft.obs.android.utilities.Log;
+
 /**
  * @author Luan Vu
  *
@@ -179,7 +181,11 @@ public class OptimalMode implements /*Parcelable */ DataProviderApi.OptimalModes
     	
     	try {
 		} catch (Exception e) {
-			// TODO: handle exception
+			Log.e("Error in generalModeName", e);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
 		}
     	
     	return "";
