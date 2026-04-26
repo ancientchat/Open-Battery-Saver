@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import vn.cybersoft.obs.android.utilities.DeviceUtils;
+import vn.cybersoft.obs.android.utilities.Log;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -179,7 +180,7 @@ public class OptimalMode implements /*Parcelable */ DataProviderApi.OptimalModes
     	
     	try {
 		} catch (Exception e) {
-			// TODO: handle exception
+			Log.e("Error getting general mode name", e);
 		}
     	
     	return "";
