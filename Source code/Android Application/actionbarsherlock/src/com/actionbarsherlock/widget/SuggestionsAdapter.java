@@ -86,8 +86,8 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
     private int mIconName2Col = INVALID_INDEX;
     private int mFlagsCol = INVALID_INDEX;
 
-    // private final Runnable mStartSpinnerRunnable;
-    // private final Runnable mStopSpinnerRunnable;
+    private final Runnable mStartSpinnerRunnable;
+    private final Runnable mStopSpinnerRunnable;
 
     /**
      * The amount of time we delay in the filter when the user presses the delete key.
@@ -107,17 +107,17 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
 
         mOutsideDrawablesCache = outsideDrawablesCache;
 
-        // mStartSpinnerRunnable = new Runnable() {
-        // public void run() {
-        // // mSearchView.setWorking(true); // TODO:
-        // }
-        // };
-        //
-        // mStopSpinnerRunnable = new Runnable() {
-        // public void run() {
-        // // mSearchView.setWorking(false); // TODO:
-        // }
-        // };
+        mStartSpinnerRunnable = new Runnable() {
+            public void run() {
+                mSearchView.setWorking(true);
+            }
+        };
+
+        mStopSpinnerRunnable = new Runnable() {
+            public void run() {
+                mSearchView.setWorking(false);
+            }
+        };
 
         // delay 500ms when deleting
 //  TODO  getFilter().setDelayer(new Filter.Delayer() {
@@ -182,7 +182,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
                 || mSearchView.getWindowVisibility() != View.VISIBLE) {
             return null;
         }
-        //mSearchView.getWindow().getDecorView().post(mStartSpinnerRunnable); // TODO:
+        mSearchView.post(mStartSpinnerRunnable);
         try {
             cursor = getSuggestions(query, QUERY_LIMIT);
             // trigger fill window so the spinner stays up until the results are copied over and
@@ -196,7 +196,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
         }
         // If cursor is null or an exception was thrown, stop the spinner and return null.
         // changeCursor doesn't get called if cursor is null
-        // mSearchView.getWindow().getDecorView().post(mStopSpinnerRunnable); // TODO:
+        mSearchView.post(mStopSpinnerRunnable);
         return null;
     }
 
@@ -280,11 +280,11 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
         // Check if the Cursor indicates that the query is not complete and show the spinner
         if (extras != null
                 && extras.getBoolean(SearchManager.CURSOR_EXTRA_KEY_IN_PROGRESS)) {
-            // mSearchView.getWindow().getDecorView().post(mStartSpinnerRunnable); // TODO:
+            mSearchView.post(mStartSpinnerRunnable);
             return;
         }
         // If cursor is null or is done, stop the spinner
-        // mSearchView.getWindow().getDecorView().post(mStopSpinnerRunnable); // TODO:
+        mSearchView.post(mStopSpinnerRunnable);
     }
 
     /**
