@@ -913,14 +913,6 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
             return false;
         }
 
-        // if it's an action specified by the searchable activity, launch the
-        // entered query with the action key
-        // TODO SearchableInfo.ActionKeyInfo actionKey = mSearchable.findActionKey(keyCode);
-        // TODO if ((actionKey != null) && (actionKey.getQueryActionMsg() != null)) {
-        // TODO     launchQuerySearch(keyCode, actionKey.getQueryActionMsg(), mQueryTextView.getText()
-        // TODO             .toString());
-        // TODO     return true;
-        // TODO }
 
         return super.onKeyDown(keyCode, event);
     }
@@ -963,12 +955,6 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
                     }
                 }
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    // TODO SearchableInfo.ActionKeyInfo actionKey = mSearchable.findActionKey(keyCode);
-                    // TODO if ((actionKey != null) && (actionKey.getQueryActionMsg() != null)) {
-                    // TODO     launchQuerySearch(keyCode, actionKey.getQueryActionMsg(), mQueryTextView
-                    // TODO             .getText().toString());
-                    // TODO     return true;
-                    // TODO }
                 }
             }
             return false;
@@ -1002,8 +988,6 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 // give "focus" to text editor, with cursor at the beginning if
                 // left key, at end if right key
-                // TODO: Reverse left/right for right-to-left languages, e.g.
-                // Arabic
                 int selPoint = (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) ? 0 : mQueryTextView
                         .length();
                 mQueryTextView.setSelection(selPoint);
@@ -1016,58 +1000,14 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
 
             // Next, check for an "up and out" move
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP && 0 == mQueryTextView.getListSelection()) {
-                // TODO: restoreUserQuery();
                 // let ACTV complete the move
                 return false;
             }
 
-            // Next, check for an "action key"
-            // TODO SearchableInfo.ActionKeyInfo actionKey = mSearchable.findActionKey(keyCode);
-            // TODO if ((actionKey != null)
-            // TODO         && ((actionKey.getSuggestActionMsg() != null) || (actionKey
-            // TODO                 .getSuggestActionMsgColumn() != null))) {
-            // TODO     // launch suggestion using action key column
-            // TODO     int position = mQueryTextView.getListSelection();
-            // TODO     if (position != ListView.INVALID_POSITION) {
-            // TODO         Cursor c = mSuggestionsAdapter.getCursor();
-            // TODO         if (c.moveToPosition(position)) {
-            // TODO             final String actionMsg = getActionKeyMessage(c, actionKey);
-            // TODO             if (actionMsg != null && (actionMsg.length() > 0)) {
-            // TODO                 return onItemClicked(position, keyCode, actionMsg);
-            // TODO             }
-            // TODO         }
-            // TODO     }
-            // TODO }
         }
         return false;
     }
 
-    /**
-     * For a given suggestion and a given cursor row, get the action message. If
-     * not provided by the specific row/column, also check for a single
-     * definition (for the action key).
-     *
-     * @param c The cursor providing suggestions
-     * @param actionKey The actionkey record being examined
-     *
-     * @return Returns a string, or null if no action key message for this
-     *         suggestion
-     */
-    // TODO private static String getActionKeyMessage(Cursor c, SearchableInfo.ActionKeyInfo actionKey) {
-    // TODO     String result = null;
-    // TODO     // check first in the cursor data, for a suggestion-specific message
-    // TODO     final String column = actionKey.getSuggestActionMsgColumn();
-    // TODO     if (column != null) {
-    // TODO         result = SuggestionsAdapter.getColumnString(c, column);
-    // TODO     }
-    // TODO     // If the cursor didn't give us a message, see if there's a single
-    // TODO     // message defined
-    // TODO     // for the actionkey (for all suggestions)
-    // TODO     if (result == null) {
-    // TODO         result = actionKey.getSuggestActionMsg();
-    // TODO     }
-    // TODO     return result;
-    // TODO }
 
     private int getSearchIconId() {
         TypedValue outValue = new TypedValue();
@@ -1110,7 +1050,7 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
      * Updates the auto-complete text view.
      */
     private void updateSearchAutoComplete() {
-        // TODO mQueryTextView.setDropDownAnimationStyle(0); // no animation
+
         mQueryTextView.setThreshold(mSearchable.getSuggestThreshold());
         mQueryTextView.setImeOptions(mSearchable.getImeOptions());
         int inputType = mSearchable.getInputType();
