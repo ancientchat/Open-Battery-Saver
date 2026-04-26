@@ -384,7 +384,7 @@ public class PowerEstimator implements Runnable {
 					/* Allow for LogUploader to decide if the log needs to be uploaded and
 					 * begin uploading if it decides it's necessary.
 					 */
-					if(logUploader.shouldUpload()) {
+					if(logUploader.shouldUpload(context.getFileStreamPath("PowerTrace.log").getAbsolutePath())) {
 						try {
 							logStream.close();
 						} catch(IOException e) {
