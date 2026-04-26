@@ -584,17 +584,12 @@ public class ValueAnimator extends Animator {
         @Override
         @SuppressWarnings("fallthrough")
         public void handleMessage(Message msg) {
-            boolean callAgain = true;
             ArrayList<ValueAnimator> animations = sAnimations.get();
             ArrayList<ValueAnimator> delayedAnims = sDelayedAnims.get();
             switch (msg.what) {
-                // TODO: should we avoid sending frame message when starting if we
-                // were already running?
                 case ANIMATION_START:
                     ArrayList<ValueAnimator> pendingAnimations = sPendingAnimations.get();
-                    if (animations.size() > 0 || delayedAnims.size() > 0) {
-                        callAgain = false;
-                    }
+                    boolean delayMessage = animations.size() > 0 || delayedAnims.size() > 0;
                     // pendingAnims holds any animations that have requested to be started
                     // We're going to clear sPendingAnimations, but starting animation may
                     // cause more to be added to the pending list (for example, if one animation
@@ -614,6 +609,10 @@ public class ValueAnimator extends Animator {
                                 delayedAnims.add(anim);
                             }
                         }
+                    }
+                    if (delayMessage) {
+                        // The loop is already running, so a frame message is already scheduled.
+                        break;
                     }
                     // fall through to process first frame of new animations
                 case ANIMATION_FRAME:
@@ -675,7 +674,7 @@ public class ValueAnimator extends Animator {
 
                     // If there are still active or delayed animations, call the handler again
                     // after the frameDelay
-                    if (callAgain && (!animations.isEmpty() || !delayedAnims.isEmpty())) {
+                    if (!animations.isEmpty() || !delayedAnims.isEmpty()) {
                         sendEmptyMessageDelayed(ANIMATION_FRAME, Math.max(0, sFrameDelay -
                             (AnimationUtils.currentAnimationTimeMillis() - currentTime)));
                     }
