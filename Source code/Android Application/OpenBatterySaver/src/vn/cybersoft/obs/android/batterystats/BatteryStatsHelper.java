@@ -857,7 +857,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
      * @throws IllegalAccessException 
      */
     private double getMobilePowerPerByte() throws Exception {
-        final long MOBILE_BPS = 200000; // TODO: Extract average bit rates from system
+        final long MOBILE_BPS = getMobileBps();
         //final double MOBILE_POWER = mPowerProfile.getAveragePower(PowerProfile.POWER_RADIO_ACTIVE) / 3600;
         final double MOBILE_POWER = (Double) mPowerProfile.getClass().getMethod("getAveragePower", String.class).invoke(mPowerProfile, "radio.active") / 3600;
 
@@ -879,7 +879,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
      * Return estimated power (in mAs) of sending a byte with the Wi-Fi radio.
      */
     private double getWifiPowerPerByte() {
-        final long WIFI_BPS = 1000000; // TODO: Extract average bit rates from system
+        final long WIFI_BPS = getWifiBps();
         //final double WIFI_POWER = mPowerProfile.getAveragePower(PowerProfile.POWER_WIFI_ACTIVE) / 3600;
         double WIFI_POWER = 0; 
 		try {
@@ -898,6 +898,68 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
 			e.printStackTrace();
 		} 
         return WIFI_POWER / (WIFI_BPS / 8);
+    }
+
+    private long getMobileBps() {
+        long mobileBps = 200000;
+        try {
+            android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+            if (tm != null) {
+                int networkType = tm.getNetworkType();
+                switch (networkType) {
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_GPRS:
+                        mobileBps = 115000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_EDGE:
+                        mobileBps = 384000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_UMTS:
+                        mobileBps = 2000000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_HSDPA:
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_HSPA:
+                    case 15: // NETWORK_TYPE_HSPAP
+                        mobileBps = 14000000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_HSUPA:
+                        mobileBps = 5760000; break;
+                    case 13: // NETWORK_TYPE_LTE
+                        mobileBps = 50000000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_EVDO_0:
+                        mobileBps = 2460000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_EVDO_A:
+                        mobileBps = 3100000; break;
+                    case 12: // NETWORK_TYPE_EVDO_B
+                        mobileBps = 14700000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_1xRTT:
+                        mobileBps = 153000; break;
+                    case 14: // NETWORK_TYPE_EHRPD
+                        mobileBps = 1000000; break;
+                    case android.telephony.TelephonyManager.NETWORK_TYPE_IDEN:
+                        mobileBps = 25000; break;
+                    default:
+                        mobileBps = 200000; break;
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return mobileBps;
+    }
+
+    private long getWifiBps() {
+        long wifiBps = 1000000;
+        try {
+            android.net.wifi.WifiManager wm = (android.net.wifi.WifiManager) mActivity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wm != null) {
+                android.net.wifi.WifiInfo info = wm.getConnectionInfo();
+                if (info != null) {
+                    int speedMbps = info.getLinkSpeed();
+                    if (speedMbps > 0) {
+                        wifiBps = speedMbps * 1000000L;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return wifiBps;
     }
 
     private void processMiscUsage() throws Exception {
