@@ -1827,4 +1827,22 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
             view.setText(text);
         }
     }
+
+    /**
+     * Called by the SuggestionsAdapter to start or stop the progress spinner.
+     * Not fully implemented in this port, just provided for compatibility.
+     * @hide
+     */
+    /* package */ void setWorking(boolean working) {
+        // TODO: implement progress spinner if needed
+    }
+
+    /**
+     * Called by the SuggestionsAdapter when the data set changes.
+     * Not fully implemented in this port, just provided for compatibility.
+     * @hide
+     */
+    /* package */ void onDataSetChanged() {
+        // TODO: implement logic on dataset change if needed
+    }
 }
