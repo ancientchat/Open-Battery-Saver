@@ -39,8 +39,7 @@ public class LogUploader {
 
   /* Returns true if the log should be uploaded now.  This may depend on log
    * file size, network conditions, etc. */
-  // TODO: This should probably give the file name of the log
-  public boolean shouldUpload() {
+  public boolean shouldUpload(String logFile) {
     return false;
   }
 
