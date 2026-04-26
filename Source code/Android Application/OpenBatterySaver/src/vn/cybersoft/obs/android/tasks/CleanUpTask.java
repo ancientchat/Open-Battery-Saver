@@ -14,6 +14,7 @@
 package vn.cybersoft.obs.android.tasks;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import vn.cybersoft.obs.android.listeners.CleanUpListener;
@@ -43,12 +44,23 @@ public class CleanUpTask extends AsyncTask<Void, String, HashMap<String, String>
 		PackageManager packageManager = mContext.getPackageManager();
 		List<RunningTaskInfo> list = activityManager.getRunningTasks(Integer.MAX_VALUE);
 
+		String myPackageName = mContext.getPackageName();
+		HashSet<String> processedPackages = new HashSet<String>();
+
 		for (RunningTaskInfo runningTaskInfo : list) {
 			String packageName = runningTaskInfo.baseActivity.getPackageName();
+
+			if (packageName == null || packageName.equals(myPackageName)) {
+				continue;
+			}
+
+			if (!processedPackages.add(packageName)) {
+				continue;
+			}
+
 			// If an Application is a non-system application it must have a launch Intent
 			// by which it can be launched. If the launch intent is null then its a system App.	
-			if (packageManager.getLaunchIntentForPackage(packageName) == null ||
-				packageManager.equals(mContext.getPackageName())) {
+			if (packageManager.getLaunchIntentForPackage(packageName) == null) {
 				continue;
 			}
 			activityManager.killBackgroundProcesses(packageName);
