@@ -267,7 +267,7 @@ public class IcsListPopupWindow {
     public void setSelection(int position) {
         DropDownListView list = mDropDownList;
         if (isShowing() && list != null) {
-            list.mListSelectionHidden = false;
+            list.setListSelectionHidden(false);
             list.setSelection(position);
             if (list.getChoiceMode() != ListView.CHOICE_MODE_NONE) {
                 list.setItemChecked(position, true);
@@ -279,7 +279,7 @@ public class IcsListPopupWindow {
         final DropDownListView list = mDropDownList;
         if (list != null) {
             // WARNING: Please read the comment where mListSelectionHidden is declared
-            list.mListSelectionHidden = true;
+            list.setListSelectionHidden(true);
             //XXX list.hideSelector();
             list.requestLayout();
         }
@@ -320,7 +320,7 @@ public class IcsListPopupWindow {
                         DropDownListView dropDownList = mDropDownList;
 
                         if (dropDownList != null) {
-                            dropDownList.mListSelectionHidden = false;
+                            dropDownList.setListSelectionHidden(false);
                         }
                     }
                 }
@@ -559,8 +559,21 @@ public class IcsListPopupWindow {
         public DropDownListView(Context context, boolean hijackFocus) {
             super(context, null, /*com.android.internal.*/R.attr.dropDownListViewStyle);
             mHijackFocus = hijackFocus;
-            // TODO: Add an API to control this
             setCacheColorHint(0); // Transparent, since the background drawable could be anything.
+        }
+
+        /**
+         * <p>Avoids jarring scrolling effect by ensuring that list elements
+         * made of a text view fit on a single line.</p>
+         *
+         * <p>WARNING: This is a workaround for a touch mode issue (see the
+         * declaration for mListSelectionHidden).</p>
+         *
+         * @param hideListSelection {@code true} to hide list selection,
+         *                          {@code false} to show
+         */
+        public void setListSelectionHidden(boolean hideListSelection) {
+            mListSelectionHidden = hideListSelection;
         }
 
         //XXX @Override
