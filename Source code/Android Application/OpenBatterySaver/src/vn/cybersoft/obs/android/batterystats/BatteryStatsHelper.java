@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -879,7 +881,20 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
      * Return estimated power (in mAs) of sending a byte with the Wi-Fi radio.
      */
     private double getWifiPowerPerByte() {
-        final long WIFI_BPS = 1000000; // TODO: Extract average bit rates from system
+        long wifiBps = 1000000;
+        if (mActivity != null) {
+            WifiManager wifiManager = (WifiManager) mActivity.getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager != null) {
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                if (wifiInfo != null) {
+                    int linkSpeed = wifiInfo.getLinkSpeed();
+                    if (linkSpeed > 0) {
+                        wifiBps = linkSpeed * 1000000L;
+                    }
+                }
+            }
+        }
+
         //final double WIFI_POWER = mPowerProfile.getAveragePower(PowerProfile.POWER_WIFI_ACTIVE) / 3600;
         double WIFI_POWER = 0; 
 		try {
@@ -897,7 +912,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-        return WIFI_POWER / (WIFI_BPS / 8);
+        return WIFI_POWER / (wifiBps / 8);
     }
 
     private void processMiscUsage() throws Exception {
