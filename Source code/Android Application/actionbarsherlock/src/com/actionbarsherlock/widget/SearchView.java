@@ -715,6 +715,14 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
     }
 
     /**
+     * Toggles the working spinner.
+     * @param working Whether a background operation is happening.
+     */
+    /* package */ void setWorking(boolean working) {
+        // Not implemented in Action Bar Sherlock
+    }
+
+    /**
      * Returns whether query refinement is enabled for all items or only specific ones.
      * @return true if enabled for all items, false otherwise.
      */
