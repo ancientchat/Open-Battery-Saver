@@ -165,13 +165,17 @@ public class OLED extends PowerComponent {
 					java.lang.Process p = Runtime.getRuntime().exec("su");
 					DataOutputStream os = new DataOutputStream(
 							p.getOutputStream());
+
+					// Sanitize the path to prevent command injection
+					String safePath = "'" + frameBufferFile.getAbsolutePath().replace("'", "'\\''") + "'";
+
 					os.writeBytes("chown " + android.os.Process.myUid() + " "
-							+ frameBufferFile.getAbsolutePath() + "\n");
+							+ safePath + "\n");
 					os.writeBytes("chown app_"
 							+ (android.os.Process.myUid() - SystemInfo.AID_APP)
-							+ " " + frameBufferFile.getAbsolutePath() + "\n");
+							+ " " + safePath + "\n");
 					os.writeBytes("chmod 660 "
-							+ frameBufferFile.getAbsolutePath() + "\n");
+							+ safePath + "\n");
 					os.writeBytes("exit\n");
 					os.flush();
 					p.waitFor();
