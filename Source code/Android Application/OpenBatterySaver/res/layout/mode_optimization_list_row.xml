@@ -56,7 +56,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="25dp"
-        android:contentDescription="@null"
+        android:contentDescription="@string/edit_mode"
         android:src="@drawable/ic_edit_mode"
         android:visibility="gone" />
 
