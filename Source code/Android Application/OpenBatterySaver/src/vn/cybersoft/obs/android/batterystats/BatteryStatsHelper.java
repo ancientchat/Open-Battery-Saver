@@ -22,6 +22,10 @@ import android.telephony.SignalStrength;
 import android.util.Log;
 import android.util.SparseArray;
 
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
+
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -849,6 +853,46 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
         }
     }
 
+    private long getMobileBps() {
+        if (mActivity == null) return 200000;
+        TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) return 200000;
+        int networkType = tm.getNetworkType();
+        switch (networkType) {
+            case TelephonyManager.NETWORK_TYPE_1xRTT: return 75000; // ~ 50-100 kbps
+            case TelephonyManager.NETWORK_TYPE_CDMA: return 39000; // ~ 14-64 kbps
+            case TelephonyManager.NETWORK_TYPE_EDGE: return 75000; // ~ 50-100 kbps
+            case TelephonyManager.NETWORK_TYPE_EVDO_0: return 700000; // ~ 400-1000 kbps
+            case TelephonyManager.NETWORK_TYPE_EVDO_A: return 1000000; // ~ 600-1400 kbps
+            case TelephonyManager.NETWORK_TYPE_GPRS: return 100000; // ~ 100 kbps
+            case TelephonyManager.NETWORK_TYPE_HSDPA: return 8000000; // ~ 2-14 Mbps
+            case TelephonyManager.NETWORK_TYPE_HSPA: return 1200000; // ~ 700-1700 kbps
+            case TelephonyManager.NETWORK_TYPE_HSUPA: return 12000000; // ~ 1-23 Mbps
+            case TelephonyManager.NETWORK_TYPE_UMTS: return 3700000; // ~ 400-7000 kbps
+            case TelephonyManager.NETWORK_TYPE_EHRPD: return 1500000; // ~ 1-2 Mbps
+            case TelephonyManager.NETWORK_TYPE_EVDO_B: return 5000000; // ~ 5 Mbps
+            case TelephonyManager.NETWORK_TYPE_HSPAP: return 15000000; // ~ 10-20 Mbps
+            case TelephonyManager.NETWORK_TYPE_IDEN: return 25000; // ~25 kbps
+            case TelephonyManager.NETWORK_TYPE_LTE: return 10000000; // ~ 10+ Mbps
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+            default:
+                return 200000;
+        }
+    }
+
+    private long getWifiBps() {
+        if (mActivity == null) return 1000000;
+        WifiManager wifiManager = (WifiManager) mActivity.getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager == null) return 1000000;
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo == null) return 1000000;
+        int linkSpeedMbps = wifiInfo.getLinkSpeed();
+        if (linkSpeedMbps > 0) {
+            return linkSpeedMbps * 1000000L;
+        }
+        return 1000000;
+    }
+
     /**
      * Return estimated power (in mAs) of sending a byte with the mobile radio.
      * @throws NoSuchMethodException 
@@ -857,7 +901,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
      * @throws IllegalAccessException 
      */
     private double getMobilePowerPerByte() throws Exception {
-        final long MOBILE_BPS = 200000; // TODO: Extract average bit rates from system
+        final long MOBILE_BPS = getMobileBps();
         //final double MOBILE_POWER = mPowerProfile.getAveragePower(PowerProfile.POWER_RADIO_ACTIVE) / 3600;
         final double MOBILE_POWER = (Double) mPowerProfile.getClass().getMethod("getAveragePower", String.class).invoke(mPowerProfile, "radio.active") / 3600;
 
@@ -879,7 +923,7 @@ import vn.cybersoft.obs.android.utilities.ReflectionUtils;
      * Return estimated power (in mAs) of sending a byte with the Wi-Fi radio.
      */
     private double getWifiPowerPerByte() {
-        final long WIFI_BPS = 1000000; // TODO: Extract average bit rates from system
+        final long WIFI_BPS = getWifiBps();
         //final double WIFI_POWER = mPowerProfile.getAveragePower(PowerProfile.POWER_WIFI_ACTIVE) / 3600;
         double WIFI_POWER = 0; 
 		try {
