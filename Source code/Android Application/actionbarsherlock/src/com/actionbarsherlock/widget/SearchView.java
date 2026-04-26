@@ -36,7 +36,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.speech.RecognizerIntent;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.KeyEventCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Editable;
 import android.text.InputType;
@@ -69,6 +71,7 @@ import com.actionbarsherlock.R;
 import com.actionbarsherlock.view.CollapsibleActionView;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.WeakHashMap;
 
 import static com.actionbarsherlock.widget.SuggestionsAdapter.getColumnString;
@@ -1002,9 +1005,11 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 // give "focus" to text editor, with cursor at the beginning if
                 // left key, at end if right key
-                // TODO: Reverse left/right for right-to-left languages, e.g.
-                // Arabic
-                int selPoint = (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) ? 0 : mQueryTextView
+                int actionKey = keyCode;
+                if (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+                    actionKey = (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) ? KeyEvent.KEYCODE_DPAD_RIGHT : KeyEvent.KEYCODE_DPAD_LEFT;
+                }
+                int selPoint = (actionKey == KeyEvent.KEYCODE_DPAD_LEFT) ? 0 : mQueryTextView
                         .length();
                 mQueryTextView.setSelection(selPoint);
                 mQueryTextView.setListSelection(0);
