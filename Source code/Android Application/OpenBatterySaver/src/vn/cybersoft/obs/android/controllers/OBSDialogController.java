@@ -686,7 +686,7 @@ public class OBSDialogController {
          * it's a Contextual menu being displayed AND only a Cancel button 
          * is shown then do this.
          
-//        if (hasButtons && (mListView != null)) {
+        if (hasButtons && (mListView != null)) {
             
              Yet another *special* case. If there is a ListView with buttons
              * don't put the buttons on the bottom but instead put them in the
@@ -705,7 +705,7 @@ public class OBSDialogController {
             buttonPanel.setLayoutParams(params);
             mListView.addFooterView(buttonPanel);
             
-//        }
+        }
         
         if ((mListView != null) && (mAdapter != null)) {
             mListView.setAdapter(mAdapter);
