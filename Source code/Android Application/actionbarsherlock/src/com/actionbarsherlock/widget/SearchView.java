@@ -1016,7 +1016,7 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
 
             // Next, check for an "up and out" move
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP && 0 == mQueryTextView.getListSelection()) {
-                // TODO: restoreUserQuery();
+                restoreUserQuery();
                 // let ACTV complete the move
                 return false;
             }
@@ -1040,6 +1040,11 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
             // TODO }
         }
         return false;
+    }
+
+    private void restoreUserQuery() {
+        setQuery(mUserQuery);
+        mQueryTextView.setSelection(mQueryTextView.length());
     }
 
     /**
