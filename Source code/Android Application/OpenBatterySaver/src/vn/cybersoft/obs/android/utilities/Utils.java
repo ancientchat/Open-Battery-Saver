@@ -117,6 +117,9 @@ public class Utils {
     public static String getBatteryPercentage(Intent batteryChangedIntent) {
         int level = batteryChangedIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         int scale = batteryChangedIntent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+        if (scale == 0) {
+            return "0%";
+        }
         return String.valueOf(level * 100 / scale) + "%";
     }
     
