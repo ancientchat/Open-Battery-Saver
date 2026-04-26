@@ -13,6 +13,10 @@
  */
 package vn.cybersoft.obs.android.activities;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import vn.cybersoft.obs.android.R;
 import vn.cybersoft.obs.android.provider.OptimalMode;
 import vn.cybersoft.obs.android.provider.PowerSchedule;
@@ -52,6 +56,7 @@ public class PowerScheduleActivity extends FragmentActivity implements OnItemCli
 	private LayoutInflater mInflater;
     private ListView mScheduleList;
     private ScheduleAdapter mSchedules;
+    private Map<Long, String> mModeNames = new HashMap<Long, String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +111,15 @@ public class PowerScheduleActivity extends FragmentActivity implements OnItemCli
         TextView textView = (TextView) v.findViewById(R.id.header_time);
         textView.setText(getString(R.string.percentage, schedule.level)); 
         textView = (TextView) v.findViewById(R.id.header_mode);
-        textView.setText(Utils.getString(this, OptimalMode.getMode(getContentResolver(), schedule.modeId).name, R.string.class));  
+
+        String modeName = mModeNames.get(schedule.modeId);
+        if (modeName == null) {
+		OptimalMode mode = OptimalMode.getMode(getContentResolver(), schedule.modeId);
+		if (mode != null) {
+			modeName = mode.name;
+		}
+        }
+        textView.setText(Utils.getString(this, modeName, R.string.class));
 
         // Set the custom view on the menu.
         menu.setHeaderView(v);
@@ -174,7 +187,16 @@ public class PowerScheduleActivity extends FragmentActivity implements OnItemCli
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		loadModeNames();
 		mSchedules.swapCursor(cursor);
+	}
+
+	private void loadModeNames() {
+		List<OptimalMode> modes = OptimalMode.getModes(getContentResolver(), null);
+		mModeNames.clear();
+		for (OptimalMode mode : modes) {
+			mModeNames.put(mode.id, mode.name);
+		}
 	}
 
 	@Override
@@ -204,7 +226,16 @@ public class PowerScheduleActivity extends FragmentActivity implements OnItemCli
 			powerLevel.setText(getString(R.string.percentage, schedule.level));
 			
 			TextView modeToChange = (TextView) view.findViewById(R.id.text2);
-			final String modeNameStr = Utils.getString(mContext, OptimalMode.getMode(getContentResolver(), schedule.modeId).name, R.string.class);
+
+			String modeName = mModeNames.get(schedule.modeId);
+			if (modeName == null) {
+				OptimalMode mode = OptimalMode.getMode(getContentResolver(), schedule.modeId);
+				if (mode != null) {
+					modeName = mode.name;
+				}
+			}
+
+			final String modeNameStr = Utils.getString(mContext, modeName, R.string.class);
 			modeToChange.setText(getString(R.string.mode_to_change, modeNameStr)); 
 			
 		}

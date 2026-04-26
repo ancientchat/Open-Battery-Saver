@@ -14,6 +14,9 @@
 package vn.cybersoft.obs.android.activities;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import vn.cybersoft.obs.android.R;
 import vn.cybersoft.obs.android.provider.OptimalMode;
@@ -65,6 +68,7 @@ public class TimeScheduleActivity extends FragmentActivity
     private ListView mScheduleList;
     private ScheduleAdapter mSchedules;
     //private Cursor mCursor;
+    private Map<Long, String> mModeNames = new HashMap<Long, String>();
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +138,14 @@ public class TimeScheduleActivity extends FragmentActivity
         textView.setText(time);
         textView = (TextView) v.findViewById(R.id.header_mode);
         
-        textView.setText(Utils.getString(this, OptimalMode.getMode(getContentResolver(), schedule.modeId).name, R.string.class));  
+        String modeName = mModeNames.get(schedule.modeId);
+        if (modeName == null) {
+		OptimalMode mode = OptimalMode.getMode(getContentResolver(), schedule.modeId);
+		if (mode != null) {
+			modeName = mode.name;
+		}
+        }
+        textView.setText(Utils.getString(this, modeName, R.string.class));
 
         // Set the custom view on the menu.
         menu.setHeaderView(v);
@@ -215,7 +226,16 @@ public class TimeScheduleActivity extends FragmentActivity
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 	    // Swap the new cursor in. (The framework will take care of closing the
 	    // old cursor once we return.)
+		loadModeNames();
 		mSchedules.swapCursor(cursor);
+	}
+
+	private void loadModeNames() {
+		List<OptimalMode> modes = OptimalMode.getModes(getContentResolver(), null);
+		mModeNames.clear();
+		for (OptimalMode mode : modes) {
+			mModeNames.put(mode.id, mode.name);
+		}
 	}
 
 	@Override
@@ -266,7 +286,16 @@ public class TimeScheduleActivity extends FragmentActivity
             timeDisplay.setTypeface(Typeface.DEFAULT);
             
 			TextView modeToChange = (TextView) view.findViewById(R.id.text2);
-			final String modeNameStr = Utils.getString(mContext, OptimalMode.getMode(getContentResolver(), schedule.modeId).name, R.string.class);
+
+			String modeName = mModeNames.get(schedule.modeId);
+			if (modeName == null) {
+				OptimalMode mode = OptimalMode.getMode(getContentResolver(), schedule.modeId);
+				if (mode != null) {
+					modeName = mode.name;
+				}
+			}
+
+			final String modeNameStr = Utils.getString(mContext, modeName, R.string.class);
 			modeToChange.setText(getString(R.string.mode_to_change, modeNameStr)); 
 			
             TextView daysOfWeekView = (TextView) view.findViewById(R.id.text3);
