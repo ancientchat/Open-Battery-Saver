@@ -56,6 +56,10 @@ public class SapphireConstants extends DreamConstants {
 		return 184.62;
 	}
 
+	public double bluetoothPower() {
+		return 20.0;
+	}
+
 	private static final double[] arrayGpsStatePower = {0.0, 33.577, 284.7624};
 	public double[] gpsStatePower() {
 		return arrayGpsStatePower;

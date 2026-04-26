@@ -23,6 +23,8 @@ import java.util.List;
 
 import vn.cybersoft.obs.andriod.batterystats2.components.Audio;
 import vn.cybersoft.obs.andriod.batterystats2.components.Audio.AudioData;
+import vn.cybersoft.obs.andriod.batterystats2.components.Bluetooth;
+import vn.cybersoft.obs.andriod.batterystats2.components.Bluetooth.BluetoothData;
 import vn.cybersoft.obs.andriod.batterystats2.components.CPU;
 import vn.cybersoft.obs.andriod.batterystats2.components.CPU.CpuData;
 import vn.cybersoft.obs.andriod.batterystats2.components.GPS;
@@ -128,8 +130,15 @@ public class PhoneSelector {
 		final PhoneConstants constants = getConstants(context);
 		final PhonePowerCalculator calculator = getCalculator(context);
 
-		// TODO: What about bluetooth?
 		// TODO: LED light on the Nexus
+
+		/* Add Bluetooth component. */
+		components.add(new Bluetooth(context));
+		functions.add(new PowerFunction() {
+			public double calculate(PowerData data) {
+				return calculator.getBluetoothPower((BluetoothData) data);
+			}
+		});
 
 		/* Add display component. */
 		if (hasOled()) {

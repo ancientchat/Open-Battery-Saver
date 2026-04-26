@@ -24,6 +24,7 @@ import vn.cybersoft.obs.andriod.batterystats2.components.CPU.CpuData;
 import vn.cybersoft.obs.andriod.batterystats2.components.GPS.GpsData;
 import vn.cybersoft.obs.andriod.batterystats2.components.LCD.LcdData;
 import vn.cybersoft.obs.andriod.batterystats2.components.OLED.OledData;
+import vn.cybersoft.obs.andriod.batterystats2.components.Bluetooth.BluetoothData;
 import vn.cybersoft.obs.andriod.batterystats2.components.Sensors.SensorData;
 import vn.cybersoft.obs.andriod.batterystats2.components.Threeg.ThreegData;
 import vn.cybersoft.obs.andriod.batterystats2.components.Wifi.WifiData;
@@ -36,6 +37,8 @@ public interface PhonePowerCalculator {
 	public double getCpuPower(CpuData data);
 
 	public double getAudioPower(AudioData data);
+
+	public double getBluetoothPower(BluetoothData data);
 
 	public double getGpsPower(GpsData data);
 
