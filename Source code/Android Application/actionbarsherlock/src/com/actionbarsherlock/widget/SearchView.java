@@ -110,6 +110,13 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
      */
     private static final String IME_OPTION_NO_MICROPHONE = "nm";
 
+    /**
+     * Constant for the IME flag to disable personalized learning, which also
+     * disables the microphone on some keyboards.
+     * Introduced in API 26 (Oreo).
+     */
+    private static final int IME_FLAG_NO_PERSONALIZED_LEARNING = 0x01000000;
+
     private OnQueryTextListener mOnQueryChangeListener;
     private OnCloseListener mOnCloseListener;
     private OnFocusChangeListener mOnQueryTextFocusChangeListener;
@@ -375,8 +382,10 @@ public class SearchView extends LinearLayout implements CollapsibleActionView {
 
         if (mVoiceButtonEnabled) {
             // Disable the microphone on the keyboard, as a mic is displayed near the text box
-            // TODO: use imeOptions to disable voice input when the new API will be available
             mQueryTextView.setPrivateImeOptions(IME_OPTION_NO_MICROPHONE);
+            if (Build.VERSION.SDK_INT >= 26) {
+                mQueryTextView.setImeOptions(mQueryTextView.getImeOptions() | IME_FLAG_NO_PERSONALIZED_LEARNING);
+            }
         }
         updateViewsVisibility(isIconified());
     }
