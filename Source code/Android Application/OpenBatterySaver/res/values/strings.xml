@@ -73,7 +73,6 @@
     <string name="network_control_summany">Automatically turn off network when screen off</string>
     <string name="cpu_control_title">CPU Control</string>
     <string name="cpu_control_summany">Adjust CPU Frequence when screen locked</string>
-    <string name="no_items_display">Nothing available to display.</string>
     <string name="mode">Mode</string>
     <string name="smart">Smart</string>
     <string name="screen_brightness">Screen Brightness</string>
