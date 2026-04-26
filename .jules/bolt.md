@@ -1,0 +1,3 @@
+## 2024-05-18 - OpenBatterySaver: ListAdapter Optimization
+**Learning:** Legacy Android codebase does not implement standard `ViewHolder` pattern in ListView adapters (like `MainMenuItemAdapter`), performing repetitive `findViewById` operations instead. The codebase uses Eclipse-style layout instead of Gradle, preventing easy test suite runs via standard CLI tools (`ant`/`gradle`).
+**Action:** When updating legacy list views in this project, proactively apply the `ViewHolder` pattern to cache DOM-like lookups. Wait for instructions or use visual inspection to verify code changes since automated build/test commands are missing.
